@@ -23,10 +23,10 @@ $ jl This is a one-line entry
 Add a multi-line entry:
 ```console
 $ jl <<EOF
-This is a
-multi-line
-entry
-EOF
+> This is a
+> multi-line
+> entry
+> EOF
 ```
 
 List entries:
