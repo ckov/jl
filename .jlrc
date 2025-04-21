@@ -1,2 +1,4 @@
+# jl configuration
+# adjust values and move this file into $HOME directory
 REPO=$HOME/journal
 COMMIT_AND_PUSH=true
