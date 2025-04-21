@@ -1,5 +1,6 @@
 #!/bin/bash
 DEFAULT_REPO=$HOME/jl
+DEFAULT_COMMIT_AND_PUSH=false
 
 # Load .jlrc (silently ignore if missing)
 if [ -f "$HOME/.jlrc" ]; then
@@ -7,6 +8,7 @@ if [ -f "$HOME/.jlrc" ]; then
 else
     echo "Warning: ~/.jlrc not found. Using defaults data location: $DEFAULT_REPO." >&2
     REPO=$DEFAULT_REPO
+    COMMIT_AND_PUSH=$DEFAULT_COMMIT_AND_PUSH
 fi
 
 # Get current date in ISO format (YYYY-MM-DD)
@@ -14,12 +16,19 @@ current_date=$(date +%F)
 current_time=$(date +%H:%M:%S)
 
 outfile="$REPO/$(basename "$0").txt"
-#outfile=o.txt
 
-#!/bin/bash
+commit_and_push() {
+	if [ "$COMMIT_AND_PUSH" = true ]; then
+	  cd $REPO
+	  git add .
+	  git commit -m "Auto commit by $0"
+	  git push
+	  echo "Committed and pushed repository $REPO" >&2
+	fi
+}
 
 # GNU getopt is more powerful than built-in getopts
-TEMP=$(getopt -o vlhd: --long verbose,list,help,directory: -n "$0" -- "$@")
+TEMP=$(getopt -o vlhd: --long verbose,list,help: -n "$0" -- "$@")
 
 if [ $? != 0 ]; then
   echo "Terminating..." >&2
@@ -29,7 +38,7 @@ fi
 eval set -- "$TEMP"
 
 verbose=false
-list_files=false
+list_entries=false
 directory=""
 
 while true; do
@@ -43,12 +52,8 @@ while true; do
       shift
       ;;
     -h|--help)
-      echo "Usage: $0 [--verbose] [--list] [--directory dir]"
+      echo "Usage: $0 [--verbose] [--list]"
       exit 0
-      ;;
-    -d|--directory)
-      directory="$2"
-      shift 2
       ;;
     --)
       shift
@@ -85,6 +90,7 @@ if [ -t 0 ]; then
 	fi
 	echo "$time_head $short_input"
 	echo "Added a quick log to $outfile" >&2
+	commit_and_push
 	exit 0
 fi
 
@@ -94,5 +100,5 @@ echo $time_head
 cat
 echo
 echo "Added a multiline log to $outfile" >&2
+commit_and_push
 exit 0
-

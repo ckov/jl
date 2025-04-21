@@ -1,0 +1,2 @@
+REPO=$HOME/journal
+COMMIT_AND_PUSH=true
