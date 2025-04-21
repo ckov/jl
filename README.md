@@ -1,6 +1,8 @@
-jl - simple journaling from the terminal
+# jl - simple journaling from the terminal
 
-# Example usage
+`jl` is a command for saving quick notes along with a timestamp to a text file.
+
+## Example usage
 
 Add a one-line entry:
 ```console
