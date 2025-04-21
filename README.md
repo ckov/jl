@@ -4,12 +4,12 @@
 
 ## Example usage
 
-Add a one-line entry:
+Add a one-line entry by passing arguments:
 ```console
 $ jl This is a one-line entry
 ```
 
-Add a multi-line entry:
+Use stdin to create a multi-line entry:
 ```console
 $ jl <<EOF
 > This is a
