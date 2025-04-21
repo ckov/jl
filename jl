@@ -28,7 +28,7 @@ commit_and_push() {
 }
 
 # GNU getopt is more powerful than built-in getopts
-TEMP=$(getopt -o vlhd: --long verbose,list,help: -n "$0" -- "$@")
+TEMP=$(getopt -o vlhd: --long verbose,list,location,help: -n "$0" -- "$@")
 
 if [ $? != 0 ]; then
   echo "Terminating..." >&2
@@ -50,6 +50,10 @@ while true; do
     -l|--list)
       list_entries=true
       shift
+      ;;
+    --location)
+      echo "$outfile" 
+      exit 0
       ;;
     -h|--help)
       echo "Usage: $0 [--verbose] [--list]"
