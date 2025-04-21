@@ -2,7 +2,14 @@
 
 `jl` is a command for saving quick notes along with a timestamp to a text file.
 
-The location of the journal file is configurable with the `$REPO` configuration parameter (default: `$HOME/journal`).
+The directory where the journal file is saved is configurable with the `$REPO` configuration parameter (default: `$HOME/journal`).
+
+The journal file is named after the script name `$0`. By default this is `jl.txt`, or use a symlink for different files:
+```console
+$ ln -s /path/to/jl mylog
+$ mylog --location
+/path/to/repo/mylog.txt
+```
 
 Configuration parameters are customizable with `$HOME/.jlrc`.
 
