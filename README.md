@@ -2,13 +2,21 @@ jl - simple journaling from the terminal
 
 # Example usage
 
-> `jl This is a one-line entry`
+Add a one-line entry:
+```console
+$ jl This is a one-line entry
+```
 
-> ```jl <<EOF
+Add a multi-line entry:
+```console
+$ jl <<EOF
 This is a
 multi-line
 entry
 EOF
 ```
 
-> `jl -l` lists entries
+List entries:
+```console
+$ jl -l
+```
