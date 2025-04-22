@@ -70,7 +70,7 @@ Command options (e.g. `--file`) have precendece over environment variables (e.g.
 
 ## Parameters interference
 
-If the `FILE` parameter is set, then `DIR` is ignored (as well as its relatives `JL_DIR` and `--dir`).
+If the `FILE` parameter is set (or the `JL_FILE` env var, or the `--file` option), then `DIR` is ignored (as well as its relatives `JL_DIR` and `--dir`).
 
 If `QUIET` is set, then `VERBOSE` is ignored and set to false (as well as `JL_VERBOSE` and `--verbose`).
 
