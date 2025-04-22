@@ -21,6 +21,13 @@ $ jl <<EOF
 List entries:
 ```console
 $ jl -l
+[2025-04-21 19:49:15] This is a one-line entry
+
+[2025-04-21 19:49:38]
+This is a
+multi-line
+entry
+
 ```
 
 ## Journal file location

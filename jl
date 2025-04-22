@@ -1,14 +1,15 @@
 #!/bin/bash
 DEFAULT_REPO=$HOME/jl
-DEFAULT_COMMIT_AND_PUSH=false
 
 # Load .jlrc (silently ignore if missing)
 if [ -f "$HOME/.jlrc" ]; then
     source "$HOME/.jlrc"
 else
-    echo "Warning: ~/.jlrc not found. Using defaults data location: $DEFAULT_REPO." >&2
+    echo "Warning: ~/.jlrc not found. Using hard-coded defaults, and directory location $DEFAULT_REPO" >&2
     REPO=$DEFAULT_REPO
-    COMMIT_AND_PUSH=$DEFAULT_COMMIT_AND_PUSH
+    COMMIT_AND_PUSH=false
+    VERBOSE=false
+    QUIET=false
 fi
 
 # Get current date in ISO format (YYYY-MM-DD)
@@ -17,18 +18,30 @@ current_time=$(date +%H:%M:%S)
 
 outfile="$REPO/$(basename "$0").txt"
 
+print_status() {
+	message=$1
+	[[ "$VERBOSE" == true ]] && echo "$message" >&2
+}
+
 commit_and_push() {
 	if [ "$COMMIT_AND_PUSH" = true ]; then
 	  cd $REPO
-	  git add .
-	  git commit -m "Auto commit by $0"
-	  git push
-	  echo "Committed and pushed repository $REPO" >&2
+	  if [ "$QUIET" = true ]; then
+		  git add . 1>/dev/null 2>&1
+		  git commit -m "Auto commit by $0" 1>/dev/null 2>&1
+		  git push 1>/dev/null 2>&1
+	  else
+		  git add . 1>&2
+		  git commit -m "Auto commit by $0" 1>&2
+		  git push 1>&2
+          fi
+	  print_status "Committed and pushed repository $REPO"
 	fi
 }
 
+
 # GNU getopt is more powerful than built-in getopts
-TEMP=$(getopt -o vlhd: --long verbose,list,location,help: -n "$0" -- "$@")
+TEMP=$(getopt -o vlqh: --long verbose,list,location,quiet,help: -n "$0" -- "$@")
 
 if [ $? != 0 ]; then
   echo "Terminating..." >&2
@@ -44,7 +57,7 @@ directory=""
 while true; do
   case "$1" in
     -v|--verbose)
-      verbose=true
+      VERBOSE=true
       shift
       ;;
     -l|--list)
@@ -54,6 +67,11 @@ while true; do
     --location)
       echo "$outfile" 
       exit 0
+      ;;
+    -q|--quiet)
+      QUIET=true
+      VERBOSE=false
+      shift
       ;;
     -h|--help)
       echo "Usage: $0 [--verbose] [--list]"
@@ -74,7 +92,7 @@ done
 #shift $((OPTIND-1))
 
 if [ "$list_entries" = true ]; then
-  echo "Listing entries..." >&2
+  print_status "Listing entries..."
   cat $outfile
   exit 0
 fi
@@ -93,7 +111,7 @@ if [ -t 0 ]; then
 	    exit 1
 	fi
 	echo "$time_head $short_input"
-	echo "Added a quick log to $outfile" >&2
+	print_status "Added a quick log to $outfile"
 	commit_and_push
 	exit 0
 fi
