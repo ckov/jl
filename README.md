@@ -43,7 +43,26 @@ $ mylog --location
 /path/to/repo/mylog.txt
 ```
 
+The above shows a possible use where different journal files are saved in the same directory. For cases where this use case does not work (e.g. you have different journals in different repositories), you can specify the full path of the journal file. This can be done explicitly with a `--file=FILE` option, or with an environment variable:
+```console
+$ JL_FILE=/path/to/alt/file.txt jl [...]
+```
+You can turn the above into a bash alias.
+
 ## Configuration
 
 Configuration parameters are customizable with `$HOME/.jlrc`. An example `.jlrc` file is found in this repository.
 
+The configuration supports the following parameters:
+  DIR
+  FILE
+  VERBOSE
+  QUIET
+  COMMIT
+  PUSH
+
+Set the boolean parameters to 'true' to turn them on.
+
+Each of these prefixed with "JL_" can be used as an environment variable (e.g. `JL_VERBOSE`.
+
+Environment variables have precendence over configuration parameters in `.jlrc`.
