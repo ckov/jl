@@ -62,8 +62,16 @@ The configuration supports the following parameters:
   PUSH.
 Each of these prefixed with "JL_" can be used as an environment variable (e.g. `JL_VERBOSE`).
 
-Set the boolean parameters to 'true' to turn them on.
+Set the boolean parameters to 'true' to turn them on. For example, `QUIET=true` has the same effect as the command flag `--quiet`.
 
 Environment variables (e.g. `JL_FILE`) have precendence over configuration parameters in `.jlrc` (e.g. `FILE`).
 
 Command options (e.g. `--file`) have precendece over environment variables (e.g. `JL_FILE`).
+
+## Parameters interference
+
+If the `FILE` parameter is set, then `DIR` is ignored (as well as its relatives `JL_DIR` and `--dir`).
+
+If `QUIET` is set, then `VERBOSE` is ignored and set to false (as well as `JL_VERBOSE` and `--verbose`).
+
+Please note that `COMMIT` and `PUSH` are mutually independent: the `PUSH` will only push previously committed changes. In order to commit and push on each entry, set them both to true. To do it manually, you can use the two short options: `jl -cp [...]`.
