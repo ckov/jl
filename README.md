@@ -54,15 +54,15 @@ You can turn the above into a bash alias.
 Configuration parameters are customizable with `$HOME/.jlrc`. An example `.jlrc` file is found in this repository.
 
 The configuration supports the following parameters:
-  DIR
-  FILE
-  VERBOSE
-  QUIET
-  COMMIT
-  PUSH
+  DIR,
+  FILE,
+  VERBOSE,
+  QUIET,
+  COMMIT,
+  PUSH.
 
 Set the boolean parameters to 'true' to turn them on.
 
-Each of these prefixed with "JL_" can be used as an environment variable (e.g. `JL_VERBOSE`.
+Each of these prefixed with "JL_" can be used as an environment variable (e.g. `JL_VERBOSE`).
 
 Environment variables have precendence over configuration parameters in `.jlrc`.
