@@ -1,6 +1,13 @@
 #!/bin/bash
 
 DEFAULT_DIR=$HOME/journal
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m'
 
 # Load .jlrc (silently ignore if missing)
 source "$HOME/.jlrc" 2>/dev/null || true
@@ -22,9 +29,14 @@ source "$HOME/.jlrc" 2>/dev/null || true
 current_date=$(date +%F)
 current_time=$(date +%H:%M:%S)
 
-# If FILE is not set by now (.jlrc or env var), use default
-: "${FILE:="$DIR/$(basename "$0").txt"}"
-# TODO use if/else above; print warning in other case that DIR is ignored since FILE was set previously
+verbose_print() {
+	message=$1
+	[[ "$VERBOSE" == true ]] && echo -e "$GREEN$message$NC" >&2
+}
+warning_print() {
+	message=$1
+	[[ "$QUIET" != true ]] && echo -e "${RED}WARNING: $message$NC" >&2
+}
 
 print_usage() {
 	script=$(basename $0)
@@ -112,14 +124,9 @@ EOF
 }
 
 
-print_status() {
-	message=$1
-	[[ "$VERBOSE" == true ]] && echo "$message" >&2
-}
-
 commit_and_push() {
 	if [ "$COMMIT" = true ]; then
-		cd $DIR
+		cd $(dirname $FILE)
 		if [ "$QUIET" = true ]; then
 		  git add . 1>/dev/null 2>&1
 		  git commit -m "Auto commit by $0" 1>/dev/null 2>&1
@@ -127,16 +134,16 @@ commit_and_push() {
 		  git add . 1>&2
 		  git commit -m "Auto commit by $0" 1>&2
 		fi
-		print_status "Committed and pushed repository $DIR"
+		verbose_print "Committed changes to repository containing $FILE"
 	fi
 	if [ "$PUSH" = true ]; then
-		cd $DIR
+		cd $(dirname $FILE)
 		if [ "$QUIET" = true ]; then
 		  git push 1>/dev/null 2>&1
 		else
 		  git push 1>&2
 		fi
-		print_status "Pushed repository $DIR"
+		verbose_print "Pushed repository containing $FILE"
 	fi
 }
 
@@ -199,7 +206,7 @@ while true; do
       break
       ;;
     *)
-      echo "Internal error!"
+      echo "Internal error!" >&2
       exit 1
       ;;
   esac
@@ -208,8 +215,18 @@ done
 # Shift processed options out of arguments
 #shift $((OPTIND-1))
 
+# If FILE is not set by now (.jlrc or env var), use default
+if [[ -z "${FILE:-}" ]]; then
+	filename=$(basename "$0")
+	FILE="$DIR/$filename.txt"
+else
+	warning_print "output file is set to $FILE, configured directory path $DIR is ignored"
+fi
+#: "${FILE:="$DIR/$(basename "$0").txt"}"
+
+
 if [ "$list_entries" = true ]; then
-  print_status "Listing entries..."
+  verbose_print "Listing entries..."
   cat $FILE
   exit 0
 fi
@@ -228,16 +245,17 @@ if [ -t 0 ]; then
 	    exit 1
 	fi
 	echo "$time_head $short_input"
-	print_status "Added a quick log to $FILE"
+	verbose_print "Added a quick log to $FILE"
 	commit_and_push
 	exit 0
 fi
 
 # else: stdin provided => long log
+[[ $# -gt 0 ]] && warning_print "passed ARGS ignored, using stdin"
 echo
 echo $time_head
 cat
 echo
-echo "Added a multiline log to $FILE" >&2
+verbose_print "Added a multiline log to $FILE"
 commit_and_push
 exit 0

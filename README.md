@@ -32,9 +32,9 @@ entry
 
 ## Journal file location
 
-The directory where the journal file is saved is configurable with the `$REPO` configuration parameter (default: `$HOME/journal`).
+The directory where the journal file is saved is configurable with the `$DIR` configuration parameter (default: `$HOME/journal`).
 
-The journal file is named after the script name `$0`, therefore by default  this is `jl.txt`. 
+The journal file is named after the script name `$0`, therefore by default this is `jl.txt`. 
 
 Create a symlink for different files:
 ```console
@@ -43,7 +43,7 @@ $ mylog --location
 /path/to/repo/mylog.txt
 ```
 
-The above shows a possible use where different journal files are saved in the same directory. For cases where this use case does not work (e.g. you have different journals in different repositories), you can specify the full path of the journal file. This can be done explicitly with a `--file=FILE` option, or with an environment variable:
+The above shows a possible use where different journal files are saved in the same directory. For cases where this use case does not work (e.g. you have different journals in different repositories), you can specify the full path of the journal file, overriding the directory location. This can be done explicitly with a `--file=FILE` option, or with an environment variable:
 ```console
 $ JL_FILE=/path/to/alt/file.txt jl [...]
 ```
@@ -72,6 +72,10 @@ Command options (e.g. `--file`) have precendece over environment variables (e.g.
 
 If the `FILE` parameter is set (or the `JL_FILE` env var, or the `--file` option), then `DIR` is ignored (as well as its relatives `JL_DIR` and `--dir`).
 
-If `QUIET` is set, then `VERBOSE` is ignored and set to false (as well as `JL_VERBOSE` and `--verbose`).
+In quiet mode (`QUIET=true` / `JL_QUIET=true` / `--quiet`), `VERBOSE` is ignored and set to false (as well as `JL_VERBOSE` and `--verbose`).
 
 Please note that `COMMIT` and `PUSH` are mutually independent: the `PUSH` will only push previously committed changes. In order to commit and push on each entry, set them both to true. To do it manually, you can use the two short options: `jl -cp [...]`.
+
+## ARGS vs stdin
+
+ARGS are only looked at if nothing came through stdin. Every entry is either one-line (ARGS) or multi-line (stdin), and stdin/multi-line have precencence.
