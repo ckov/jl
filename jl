@@ -4,11 +4,6 @@ DEFAULT_DIR=$HOME/journal
 
 # Load .jlrc (silently ignore if missing)
 source "$HOME/.jlrc" 2>/dev/null || true
-#if [ -f "$HOME/.jlrc" ]; then
-#    source "$HOME/.jlrc"
-#else
-    #echo "Warning: ~/.jlrc not found." >&2
-#fi
 
 # If not set, use env vars
 #[[ -z "${DIR:-}" ]] && DIR=$JL_DIR
@@ -29,6 +24,7 @@ current_time=$(date +%H:%M:%S)
 
 # If FILE is not set by now (.jlrc or env var), use default
 : "${FILE:="$DIR/$(basename "$0").txt"}"
+# TODO use if/else above; print warning in other case that DIR is ignored since FILE was set previously
 
 print_usage() {
 	script=$(basename $0)
