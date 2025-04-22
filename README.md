@@ -60,9 +60,10 @@ The configuration supports the following parameters:
   QUIET,
   COMMIT,
   PUSH.
+Each of these prefixed with "JL_" can be used as an environment variable (e.g. `JL_VERBOSE`).
 
 Set the boolean parameters to 'true' to turn them on.
 
-Each of these prefixed with "JL_" can be used as an environment variable (e.g. `JL_VERBOSE`).
+Environment variables (e.g. `JL_FILE`) have precendence over configuration parameters in `.jlrc` (e.g. `FILE`).
 
-Environment variables have precendence over configuration parameters in `.jlrc`.
+Command options (e.g. `--file`) have precendece over environment variables (e.g. `JL_FILE`).
